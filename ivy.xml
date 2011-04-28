@@ -1,0 +1,37 @@
+<ivy-module version='2.0'>
+  <info organisation='${ivy.artifact.group}' module='${ivy.artifact.id}' revision='${project.revision}' />
+  <configurations>
+    <conf name='default' />
+    <conf name='test' visibility='private' />
+  </configurations>
+  <publications>
+    <artifact name='${ivy.artifact.id}' type='jar' conf='default' />
+  </publications>
+  <dependencies>
+    <dependency org='commons-logging' name='commons-logging-api' rev='1.1' transitive='false' />
+    <dependency org='pentaho' name='pentaho-bi-platform-api' rev='${dependency.bi-platform.revision}' changing='true' transitive='false' />
+    <dependency org='pentaho' name='pentaho-bi-platform-web-servlet' rev='${dependency.bi-platform.revision}' changing='true' transitive='false' />
+    <dependency org='pentaho' name='pentaho-bi-platform-test-foundation' rev='${dependency.bi-platform.revision}' changing='true' transitive='true' />
+    <dependency org='pentaho' name='pentaho-bi-platform-engine-core' rev='${dependency.bi-platform.revision}'  changing='true' transitive='false' />
+    <dependency org='pentaho' name='pentaho-bi-platform-engine-services' rev='${dependency.bi-platform.revision}'  changing='true' transitive='false' />
+    <dependency org='pentaho' name='pentaho-bi-platform-plugin-services' rev='${dependency.bi-platform.revision}'  changing='true' transitive='false' />
+    
+    <!-- jersey -->
+    <dependency org="com.sun.jersey" name="jersey-core" rev="1.5" transitive="false">
+      <artifact name="jersey-core" type="jar"/>
+    </dependency>
+    <dependency org="com.sun.jersey.contribs" name="jersey-spring" rev="1.5" transitive="false">
+      <artifact name="jersey-spring" type="jar"/>
+    </dependency>
+    <dependency org="com.sun.jersey" name="jersey-server" rev="1.5" transitive="false">
+      <artifact name="jersey-server" type="jar"/>
+    </dependency>
+    <dependency org="com.sun.jersey" name="jersey-client" rev="1.5" transitive="false">
+      <artifact name="jersey-client" type="jar"/>
+    </dependency>
+    <!-- END JAX-WS (Service extension) dependencies -->
+    
+    <dependency org="org.springframework" name="spring" rev="2.5.6" transitive="false" />
+    <dependency org="javax.servlet" name="servlet-api" rev="2.4" />
+  </dependencies>
+</ivy-module>
