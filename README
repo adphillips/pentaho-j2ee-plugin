@@ -2,3 +2,11 @@ This is a plugin to the Pentaho BIServer 3.x to support the ability of a plugin
 to provide a standard J2EE Servlet as a content generator.  This plugin also adds
 a JAXRS compatibility layer that allows you to define JAXRS beans in spring xml
 within your plugin.
+
+To build, run:
+$ ant
+Note: this will run a resolve which will download the missing jars to make your project compile, and eclipse happy too
+
+If you want to deploy to an existing Pentaho BIServer, run:
+$ ant install
+Note: this requires paths to your BIServer install to be correct in build.properties
