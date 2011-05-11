@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.enunciate.modules.jersey.EnunciateJerseyServletContainer;
 import org.pentaho.platform.api.engine.IPluginManager;
 import org.pentaho.platform.engine.core.system.PentahoSystem;
 import org.pentaho.platform.engine.services.solution.BaseContentGenerator;
@@ -29,18 +30,22 @@ public class ServletAdapterContentGenerator extends BaseContentGenerator {
   private IPluginManager pm = PentahoSystem.get(IPluginManager.class);
 
   private static ConfigurableApplicationContext appContext;
+  
+  private static final String PLUGIN_ID = "j2ee";
 
-  private static JAXRSPluginServlet servlet;
+//  private static JAXRSPluginServlet servlet;
+  private static EnunciateJerseyServletContainer servlet;
 
   public ServletAdapterContentGenerator() throws ServletException {
     final ClassLoader origLoader = Thread.currentThread().getContextClassLoader();
-    final PluginClassLoader tempLoader = (PluginClassLoader) pm.getClassLoader("j2ee");
+    final PluginClassLoader tempLoader = (PluginClassLoader) pm.getClassLoader(PLUGIN_ID);
     try {
       Thread.currentThread().setContextClassLoader(tempLoader);
 
       if (appContext == null) {
         appContext = getSpringBeanFactory();
-        servlet = (JAXRSPluginServlet) appContext.getBean("jaxrsPluginServlet");
+//        servlet = (JAXRSPluginServlet) appContext.getBean("jaxrsPluginServlet");
+        servlet = (EnunciateJerseyServletContainer) appContext.getBean("enunciatePluginServlet");
         ServletConfig servletConfig = new ServletConfig() {
 
           @Override
@@ -79,7 +84,7 @@ public class ServletAdapterContentGenerator extends BaseContentGenerator {
         "httpresponse");
 
     final ClassLoader origLoader = Thread.currentThread().getContextClassLoader();
-    final PluginClassLoader tempLoader = (PluginClassLoader) pm.getClassLoader("j2ee");
+    final PluginClassLoader tempLoader = (PluginClassLoader) pm.getClassLoader(PLUGIN_ID);
     try {
       Thread.currentThread().setContextClassLoader(tempLoader);
       servlet.service(request, response);
@@ -94,7 +99,7 @@ public class ServletAdapterContentGenerator extends BaseContentGenerator {
   }
 
   private ConfigurableApplicationContext getSpringBeanFactory() {
-    final PluginClassLoader loader = (PluginClassLoader) pm.getClassLoader("j2ee");
+    final PluginClassLoader loader = (PluginClassLoader) pm.getClassLoader(PLUGIN_ID);
     File f = new File(loader.getPluginDir(), "plugin.spring.xml"); //$NON-NLS-1$
     if (f.exists()) {
       logger.debug("Found plugin spring file @ " + f.getAbsolutePath()); //$NON-NLS-1$

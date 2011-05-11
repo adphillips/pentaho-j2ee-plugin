@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin title='Sample plugin xml for j2ee-adapter-plugin' name="j2ee">
 	<content-generator id="j2ee" title="fa la la la la, la la la la" type="notused" class="org.pentaho.plugin.j2ee.ServletAdapterContentGenerator"/>
-	<!--bean id="jaxrsPluginServlet" class="org.pentaho.plugin.j2ee.JAXRSPluginServlet" /-->
 </plugin>
