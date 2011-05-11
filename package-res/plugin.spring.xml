@@ -9,8 +9,8 @@
 
   <context:annotation-config />
 
-  <bean id="jaxrsPluginServlet" class="org.pentaho.plugin.jaxrs.JAXRSPluginServlet" />
-  <bean class="org.pentaho.plugin.jaxrs.TestResource"/>
+  <bean id="jaxrsPluginServlet" class="org.pentaho.plugin.j2ee.JAXRSPluginServlet" />
+  <bean class="org.pentaho.plugin.j2ee.TestResource"/>
   
 
 </beans>

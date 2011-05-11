@@ -23,58 +23,78 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 @SuppressWarnings("serial")
 public class ServletAdapterContentGenerator extends BaseContentGenerator {
-  
+
   private static final Log logger = LogFactory.getLog(ServletAdapterContentGenerator.class);
+
   private IPluginManager pm = PentahoSystem.get(IPluginManager.class);
+
   private static ConfigurableApplicationContext appContext;
+
   private static JAXRSPluginServlet servlet;
-  
+
   public ServletAdapterContentGenerator() throws ServletException {
-    if(appContext == null) {
-      appContext = getSpringBeanFactory();
-      servlet = (JAXRSPluginServlet)appContext.getBean("jaxrsPluginServlet");
-      ServletConfig servletConfig = new ServletConfig() {
+    final ClassLoader origLoader = Thread.currentThread().getContextClassLoader();
+    final PluginClassLoader tempLoader = (PluginClassLoader) pm.getClassLoader("j2ee");
+    try {
+      Thread.currentThread().setContextClassLoader(tempLoader);
 
-        @Override
-        public String getInitParameter(String name) {
-          return null;
-        }
+      if (appContext == null) {
+        appContext = getSpringBeanFactory();
+        servlet = (JAXRSPluginServlet) appContext.getBean("jaxrsPluginServlet");
+        ServletConfig servletConfig = new ServletConfig() {
 
-        @Override
-        public Enumeration getInitParameterNames() {
-          return new Hashtable<String, String>().elements();
-        }
+          @Override
+          public String getInitParameter(String name) {
+            return null;
+          }
 
-        @Override
-        public ServletContext getServletContext() {
-          return null;
-        }
+          @Override
+          public Enumeration getInitParameterNames() {
+            return new Hashtable<String, String>().elements();
+          }
 
-        @Override
-        public String getServletName() {
-          return "UglyAdapterServlet";
-        }
-        
-      };
-      servlet.init(servletConfig);
+          @Override
+          public ServletContext getServletContext() {
+            return null;
+          }
+
+          @Override
+          public String getServletName() {
+            return "ServletAdapterContentGenerator";
+          }
+
+        };
+        servlet.init(servletConfig);
+      }
+    } finally {
+      Thread.currentThread().setContextClassLoader(origLoader);
     }
   }
 
   @SuppressWarnings("nls")
   @Override
   public void createContent() throws Exception {
-    HttpServletRequest request = (HttpServletRequest)this.parameterProviders.get("path").getParameter("httprequest");
-    HttpServletResponse response = (HttpServletResponse)this.parameterProviders.get("path").getParameter("httpresponse");
-    servlet.service(request, response);
+    HttpServletRequest request = (HttpServletRequest) this.parameterProviders.get("path").getParameter("httprequest");
+    HttpServletResponse response = (HttpServletResponse) this.parameterProviders.get("path").getParameter(
+        "httpresponse");
+
+    final ClassLoader origLoader = Thread.currentThread().getContextClassLoader();
+    final PluginClassLoader tempLoader = (PluginClassLoader) pm.getClassLoader("j2ee");
+    try {
+      Thread.currentThread().setContextClassLoader(tempLoader);
+      servlet.service(request, response);
+    } finally {
+      Thread.currentThread().setContextClassLoader(origLoader);
+    }
   }
 
   @Override
   public Log getLogger() {
     return logger;
   }
-  
+
   private ConfigurableApplicationContext getSpringBeanFactory() {
-    final PluginClassLoader loader = (PluginClassLoader)pm.getClassLoader("jaxrs");
+    final PluginClassLoader loader = (PluginClassLoader) pm.getClassLoader("j2ee");
     File f = new File(loader.getPluginDir(), "plugin.spring.xml"); //$NON-NLS-1$
     if (f.exists()) {
       logger.debug("Found plugin spring file @ " + f.getAbsolutePath()); //$NON-NLS-1$
