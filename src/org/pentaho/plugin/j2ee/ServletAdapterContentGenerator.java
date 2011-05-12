@@ -21,6 +21,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.security.wrapper.SavedRequestAwareWrapper;
 
 @SuppressWarnings("serial")
 public class ServletAdapterContentGenerator extends BaseContentGenerator {
@@ -46,30 +47,7 @@ public class ServletAdapterContentGenerator extends BaseContentGenerator {
         appContext = getSpringBeanFactory();
 //        servlet = (JAXRSPluginServlet) appContext.getBean("jaxrsPluginServlet");
         servlet = (EnunciateJerseyServletContainer) appContext.getBean("enunciatePluginServlet");
-        ServletConfig servletConfig = new ServletConfig() {
-
-          @Override
-          public String getInitParameter(String name) {
-            return null;
-          }
-
-          @Override
-          public Enumeration getInitParameterNames() {
-            return new Hashtable<String, String>().elements();
-          }
-
-          @Override
-          public ServletContext getServletContext() {
-            return null;
-          }
-
-          @Override
-          public String getServletName() {
-            return "ServletAdapterContentGenerator";
-          }
-
-        };
-        servlet.init(servletConfig);
+        servlet.init(new MutableServletConfig("ServletAdapterContentGenerator"));
       }
     } finally {
       Thread.currentThread().setContextClassLoader(origLoader);
@@ -79,7 +57,13 @@ public class ServletAdapterContentGenerator extends BaseContentGenerator {
   @SuppressWarnings("nls")
   @Override
   public void createContent() throws Exception {
-    HttpServletRequest request = (HttpServletRequest) this.parameterProviders.get("path").getParameter("httprequest");
+    Object requestOrWrapper = this.parameterProviders.get("path").getParameter("httprequest");
+    HttpServletRequest request = null;
+    if(requestOrWrapper instanceof SavedRequestAwareWrapper) {
+      request = (HttpServletRequest) ((SavedRequestAwareWrapper)requestOrWrapper).getRequest();
+    } else {
+      request = (HttpServletRequest)requestOrWrapper;
+    }
     HttpServletResponse response = (HttpServletResponse) this.parameterProviders.get("path").getParameter(
         "httpresponse");
 
