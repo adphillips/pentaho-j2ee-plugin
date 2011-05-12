@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -30,11 +31,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.enunciate.modules.jersey.EnunciateJerseyServletContainer;
+import org.codehaus.enunciate.modules.jersey.JerseyAdaptedHttpServletRequest;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.core.spi.component.ioc.IoCComponentProviderFactory;
 import com.sun.jersey.spi.container.WebApplication;
 
 
@@ -91,5 +95,18 @@ public class EnunciateJerseyPluginServlet extends EnunciateJerseyServletContaine
     ((MutableServletConfig)config).setInitParameters(initParams);
     super.init(config);
   }
+  
+  @Override
+  protected IoCComponentProviderFactory loadResourceProviderFacotry(ResourceConfig rc) {
+	    try {
+	      return (IoCComponentProviderFactory) loadClass(getInitParameter(JerseyAdaptedHttpServletRequest.PROPERTY_RESOURCE_PROVIDER_FACTORY))
+	        .getConstructor(ResourceConfig.class, ConfigurableApplicationContext.class)
+	        .newInstance(rc, applicationContext);
+	    }
+	    catch (Throwable e) {
+	      logger.info("Unable to load the spring component provider factory. Using the jersey default...");
+	      return null;
+	    }
+	  }
 
 }

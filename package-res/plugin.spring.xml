@@ -21,6 +21,8 @@
       <map>
         <entry key="com.sun.jersey.config.property.resourceConfigClass" value="com.sun.jersey.api.core.PackagesResourceConfig" />
         <entry key="com.sun.jersey.config.property.packages" value="org.pentaho.plugin.j2ee" />
+        <entry key="org.codehaus.enunciate.modules.jersey.config.ResourceProviderFactory" value="com.sun.jersey.spi.spring.container.SpringComponentProviderFactory" />
+        
       </map>
     </property>
   </bean>
