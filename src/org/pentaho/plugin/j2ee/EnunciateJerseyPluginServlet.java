@@ -21,17 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.enunciate.modules.jersey.EnunciateJerseyServletContainer;
-import org.codehaus.enunciate.modules.jersey.JerseyAdaptedHttpServletRequest;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -40,6 +39,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.core.spi.component.ioc.IoCComponentProviderFactory;
 import com.sun.jersey.spi.container.WebApplication;
+import com.sun.jersey.spi.spring.container.SpringComponentProviderFactory;
 
 
 /**
@@ -69,11 +69,27 @@ public class EnunciateJerseyPluginServlet extends EnunciateJerseyServletContaine
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
     this.applicationContext = applicationContext;
   }
-
+  
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     logger.debug("servicing request for resource " + request.getPathInfo()); //$NON-NLS-1$
-    super.service(request, response);
+    //Strip out the content generator id from the URL here so Jersey can match the @Path of the resource
+    HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request) {
+      
+      @Override
+      public String getRequestURI() {
+        String uri = super.getRequestURI().replace("content/", "");
+        return uri;
+      }
+      
+      @Override
+      public StringBuffer getRequestURL() {
+        String url = super.getRequestURL().toString();
+        return new StringBuffer(url.replace("content/", ""));
+      }
+      
+    };
+    super.service(wrapper, response);
   }
 
   @Override
@@ -96,16 +112,14 @@ public class EnunciateJerseyPluginServlet extends EnunciateJerseyServletContaine
     super.init(config);
   }
   
+  @SuppressWarnings("unchecked")
   @Override
   protected IoCComponentProviderFactory loadResourceProviderFacotry(ResourceConfig rc) {
 	    try {
-	      return (IoCComponentProviderFactory) loadClass(getInitParameter(JerseyAdaptedHttpServletRequest.PROPERTY_RESOURCE_PROVIDER_FACTORY))
-	        .getConstructor(ResourceConfig.class, ConfigurableApplicationContext.class)
-	        .newInstance(rc, applicationContext);
+	      return new SpringComponentProviderFactory(rc, (ConfigurableApplicationContext)applicationContext);
 	    }
 	    catch (Throwable e) {
-	      logger.info("Unable to load the spring component provider factory. Using the jersey default...");
-	      return null;
+	      throw new IllegalStateException("Unable to load the spring component provider factory.", e);
 	    }
 	  }
 
