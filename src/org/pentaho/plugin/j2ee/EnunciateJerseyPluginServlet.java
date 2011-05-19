@@ -78,6 +78,19 @@ public class EnunciateJerseyPluginServlet extends EnunciateJerseyServletContaine
   }
   
   @Override
+  protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // TODO Auto-generated method stub
+    super.doPut(req, resp);
+  }
+  
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // TODO Auto-generated method stub
+    super.doPost(req, resp);
+  }
+  
+  
+  @Override
   public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     logger.debug("servicing request for resource " + request.getPathInfo()); //$NON-NLS-1$
     //Strip out the content generator id from the URL here so Jersey can match the @Path of the resource

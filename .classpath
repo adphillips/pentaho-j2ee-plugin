@@ -50,6 +50,8 @@
 	<classpathentry kind="lib" path="lib/pentaho-bi-platform-test-foundation-3.8.0-stable-sources.jar" />
 	<classpathentry kind="lib" path="lib/pentaho-bi-platform-test-foundation-3.8.0-stable.jar" />
 	<classpathentry kind="lib" path="lib/pentaho-bi-platform-util-3.8.0-stable.jar" />
+	<classpathentry kind="lib" path="lib/pentaho-bi-platform-web-3.8.0-stable-sources.jar" />
+	<classpathentry kind="lib" path="lib/pentaho-bi-platform-web-3.8.0-stable.jar" />
 	<classpathentry kind="lib" path="lib/pentaho-bi-platform-web-servlet-3.8.0-stable-sources.jar" />
 	<classpathentry kind="lib" path="lib/pentaho-bi-platform-web-servlet-3.8.0-stable.jar" />
 	<classpathentry kind="lib" path="lib/pentaho-connections-2.2.2.jar" />
@@ -115,6 +117,8 @@
 	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-test-foundation-3.8.0-stable-sources.jar" />
 	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-test-foundation-3.8.0-stable.jar" />
 	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-util-3.8.0-stable.jar" />
+	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-web-3.8.0-stable-sources.jar" />
+	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-web-3.8.0-stable.jar" />
 	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-web-servlet-3.8.0-stable-sources.jar" />
 	<classpathentry kind="lib" path="test-lib/pentaho-bi-platform-web-servlet-3.8.0-stable.jar" />
 	<classpathentry kind="lib" path="test-lib/pentaho-connections-2.2.2.jar" />

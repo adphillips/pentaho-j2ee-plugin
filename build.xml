@@ -10,6 +10,7 @@
     <copy todir="${pentaho.solutions.dir}">
       <fileset dir="${basedir}/solutions/"/>
     </copy>
+    <copy file="${classes.dir}/org/pentaho/platform/web/servlet/GenericServlet.class" todir="${pentaho.classes.dir}/org/pentaho/platform/web/servlet/"/>
   </target>
 
   <!-- 

@@ -23,7 +23,10 @@
  */
 package org.pentaho.plugin.j2ee;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -62,5 +65,20 @@ public class TestResource {
   @Path("/json")
   public TestJson getJson() throws Exception {
     return new TestJson();
+  }
+  
+  @POST
+  public void doPost(String postBody) {
+    System.out.println("doing POST with post body ["+postBody+"]");
+  }
+  
+  @PUT
+  public void doPut(String putBody) {
+    System.out.println("doing PUT with put body ["+putBody+"]");
+  }
+  
+  @DELETE
+  public void doDelete() {
+    System.out.println("Deleting test reosource");
   }
 }
